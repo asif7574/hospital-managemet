@@ -8,6 +8,12 @@ import { Doctor } from "../pages/employee/doctor";
 import { EmployeeLayout } from "../layout/EmployeeLayout";
 import { ErrorPage } from "../pages/shared/ErrorPage";
 import { PatientSearch } from "../pages/shared/PatientSearch";
+import { ProfilePage } from "../pages/shared/ProfilePage";
+import { CreatePatient } from "../pages/other/CreatePatient";
+import { UserSearch } from "../pages/shared/UserSearch";
+import { Pharmacy } from "../pages/employee/Pharmacy";
+
+import { PatientDetails } from "../pages/shared/PatientDetails";
 
 
 export const router = createBrowserRouter([
@@ -29,6 +35,10 @@ export const router = createBrowserRouter([
           element: <Login/>,
         },
         {
+          path: "profile",
+          element: <ProfilePage/>,
+        },
+        {
           path: "lab",
           element: <Lab/>,
         },
@@ -37,9 +47,26 @@ export const router = createBrowserRouter([
           element: <Doctor/>,
         },
         {
+          path: "create-patient",
+          element: <CreatePatient/>,
+        },
+        {
+          path: "user",
+          element: <UserSearch/>,
+        },
+        {
+          path: "pharmacy",
+          element: <Pharmacy/>,
+        },
+        {
           path: "patient",
           element: <PatientSearch/>,
         },
+        {
+          path: "patientDetails/:id",
+          element: <PatientDetails/>,
+        },
+        
       ]
     }
   ]); 

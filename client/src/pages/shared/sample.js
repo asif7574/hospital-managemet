@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { axiosInstance } from "../../config/axiosInstance";
+import axios from "axios";
 
-
-export const Pharmacy = () => {
- 
+export const UserSearch = () => {
   const [medicines, setMedicines] = useState([]);
   const [filteredMedicines, setFilteredMedicines] = useState([]);
   const [unitPrices, setUnitPrices] = useState({}); // Store unit prices for medicines
-
-  const user = {
-    save_api: "/pharmacy//create-pharmacy-bill",
-    drug_route: "/pharmacy/get-all-drugs",
-    signup_route: "/signup",
-  };
 
   const { register, control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
@@ -24,88 +14,68 @@ export const Pharmacy = () => {
       total_amount: 0,
     },
   });
-  
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "medicines",
   });
+
+  // Watch for changes in medicines and quantities
   const formValues = watch();
-  const navigate = useNavigate();
 
-const fetchDrugData = async () => {
-  try {
-    const response = await axiosInstance({ method: "GET", url: user.drug_route });
-    setMedicines(response?.data?.data); 
-    setFilteredMedicines(response?.data);
-    const prices = {};
-    medicines.forEach((med) => {
-        prices[med._id] = med.price; // Assuming backend returns _id and price
-      });
-      setUnitPrices(prices);
-    
-} catch (error) {
-    console.log(err)
-} 
+  useEffect(() => {
+    // Fetch medicines from the backend
+    axios
+      .get("/api/medicines") // Replace with your backend API endpoint
+      .then((response) => {
+        setMedicines(response.data);
+        setFilteredMedicines(response.data);
+        const prices = {};
+        response.data.forEach((med) => {
+          prices[med._id] = med.price; // Assuming backend returns _id and price
+        });
+        setUnitPrices(prices);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
-};
+  useEffect(() => {
+    // Update total price for each medicine
+    const updatedMedicines = formValues.medicines.map((item) => {
+      const unitPrice = unitPrices[item.medicine] || 0;
+      const totalPrice = unitPrice * item.quantity;
+      return { ...item, unit_price: unitPrice, total_price: totalPrice };
+    });
 
-console.log("unitPrices===", unitPrices);
-console.log("medicine===", medicines);
-console.log("FORM VAL===", formValues);
+    const totalAmount = updatedMedicines.reduce((sum, item) => sum + item.total_price, 0);
+    setValue("medicines", updatedMedicines);
+    setValue("total_amount", totalAmount);
+  }, [formValues.medicines, unitPrices, setValue]);
 
-useEffect(() => {
-fetchDrugData()
-}, []);
-
-
-useEffect(() => {
-  // Update total price for each medicine
-  const updatedMedicines = formValues.medicines.map((item) => {
-    const unitPrice = unitPrices[item.medicine] || 0;
-    const totalPrice = unitPrice * item.quantity;
-    return { ...item, unit_price: unitPrice, total_price: totalPrice };
-  });
-
-  const totalAmount = updatedMedicines.reduce((sum, item) => sum + item.total_price, 0);
-  setValue("medicines", updatedMedicines);
-  setValue("total_amount", totalAmount);
-}, [unitPrices, setValue]);
-
- const handleSearchChange = (index, value) => {
+  const handleSearchChange = (index, value) => {
     // Filter medicines by search input
     const filtered = medicines.filter((med) =>
       med.drug_name.toLowerCase().includes(value.toLowerCase())
     );
-   
     setFilteredMedicines(filtered);
 
     // Update medicine name and clear the medicine ID if the search changes
     setValue(`medicines.${index}.medicine_name`, value);
     setValue(`medicines.${index}.medicine`, "");
   };
-  
+
   const selectMedicine = (index, medicine) => {
     setValue(`medicines.${index}.medicine`, medicine._id);
     setValue(`medicines.${index}.medicine_name`, medicine.drug_name);
-    setValue(`medicines.${index}.unit_price`, medicine.price);
-
-    // setValue(`medicines.${index}.total_price`, medicine.price*quantity);
-    
   };
-// console.log("filter",filteredMedicines);
 
-  const onSubmit = async (data) => {
-      try {
-          console.log(data,'====data');
-          
-          const response = await axiosInstance({ method: "POST", url: user.save_api, data });
-          console.log(response, "====response");
-          toast.success("bill generated successfully");
-          navigate(user.profile_route);
-      } catch (error) {
-          toast.error("Log-in failed");
-          console.log(error);
-      }
+  const onSubmit = (data) => {
+    console.log(data);
+    // Post the form data to the backend
+    axios
+      .post("/api/save", data) // Replace with your backend save API
+      .then((response) => console.log("Saved successfully"))
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -146,7 +116,7 @@ useEffect(() => {
                       <input
                         type="text"
                         className="input input-bordered w-full"
-                        // {...register(`medicines.${index}.medicine_name`, { required: true })}
+                        {...register(`medicines.${index}.medicine_name`, { required: true })}
                         onChange={(e) => handleSearchChange(index, e.target.value)}
                         placeholder="Search medicine"
                         value={formValues.medicines[index]?.medicine_name || ""}
@@ -186,7 +156,7 @@ useEffect(() => {
 
                   {/* Total Price */}
                   <td>
-                    <span>{formValues.medicines[index]?.unit_price * formValues.medicines[index]?.quantity|| 0}</span>
+                    <span>{formValues.medicines[index]?.total_price || 0}</span>
                   </td>
 
                   {/* Remove Row */}
@@ -224,7 +194,7 @@ useEffect(() => {
             type="text"
             className="input input-bordered"
             {...register("total_amount")}
-           
+            readOnly
           />
         </div>
 
