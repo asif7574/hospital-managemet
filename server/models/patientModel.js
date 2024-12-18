@@ -19,6 +19,7 @@ const patientSchema = new mongoose.Schema(
             // required: true,
             minLength: 5,
             maxLength: 30,
+            default:"sample@gmail.com",
         },
         mobile: {
             type: String,
@@ -33,7 +34,8 @@ const patientSchema = new mongoose.Schema(
             required: true,
         },
         sex: {
-            enum:["male","female","rather not say"],
+            type:String,
+            enum:["Male","Female","Other"],
 
         },
         opIds: [{ type: mongoose.Types.ObjectId, ref: "Opdata" }],

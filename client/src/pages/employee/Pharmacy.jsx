@@ -9,6 +9,7 @@ export const Pharmacy = () => {
  
   const [medicines, setMedicines] = useState([]);
   const [filteredMedicines, setFilteredMedicines] = useState([]);
+  
   const [unitPrices, setUnitPrices] = useState({}); // Store unit prices for medicines
 
   const user = {
@@ -88,7 +89,7 @@ useEffect(() => {
     setValue(`medicines.${index}.medicine`, medicine._id);
     setValue(`medicines.${index}.medicine_name`, medicine.drug_name);
     setValue(`medicines.${index}.unit_price`, medicine.price);
-
+    setFilteredMedicines([]);
     // setValue(`medicines.${index}.total_price`, medicine.price*quantity);
     
   };
@@ -146,7 +147,7 @@ useEffect(() => {
                       <input
                         type="text"
                         className="input input-bordered w-full"
-                        // {...register(`medicines.${index}.medicine_name`, { required: true })}
+                        {...register(`medicines.${index}.medicine_name`, { required: true })}
                         onChange={(e) => handleSearchChange(index, e.target.value)}
                         placeholder="Search medicine"
                         value={formValues.medicines[index]?.medicine_name || ""}

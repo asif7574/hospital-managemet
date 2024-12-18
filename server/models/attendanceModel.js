@@ -5,11 +5,13 @@ const attendanceSchema = new mongoose.Schema(
         date: {
             type:Date
         },
-        employee: [{ type: mongoose.Types.ObjectId, ref: "Employee" }],
-        attendance:{
+        attendance:[{
+        employee: { type: mongoose.Types.ObjectId, ref: "Employee" },
+        present:{
             type:Boolean,
             default:false,
         },
+    }],
     },
     { timestamps: true }
 );

@@ -10,14 +10,14 @@ export const Header = () => {
                 <div className="text-3xl font-bold">Logo</div>
             </Link>
             <nav className="flex gap-16 items-center font-semibold">
-                {/* <Link to={"/"}>Home</Link>
+                <Link to={"/"}>Home</Link>
                 <Link to={"/about"}>Profile</Link>
-                <Link to={"/course"}>Admin Login</Link> */}
+                {/* <Link to={"/course"}>Admin Login</Link> */}
             </nav>
 
             <div className="flex items-center gap-10">
                 <DarkMode/>
-                <button onClick={()=>navigate('/signup')} className="btn btn-primary">Login</button>
+                <button onClick={()=>navigate('/login')} className="btn btn-primary">Login</button>
             </div>
         </div>
   )

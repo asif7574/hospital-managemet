@@ -1,10 +1,19 @@
+
+// update profile
+
+
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useFetch } from "../../hooks/useFetch";
+import toast from "react-hot-toast";
+import { axiosInstance } from "../../config/axiosInstance";
+
 
 
 export const Home = () => {
-  const [profileData, setProfileData] = useState({});
+  
   const [updateMessage, setUpdateMessage] = useState("");
+    const [profileData, isLoading, error] = useFetch("/staff/profile");
 
   const {
     register,
@@ -14,7 +23,7 @@ export const Home = () => {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
+  // useEffect(() => {
 //     // Fetch profile data from the API
 //     fetch("https://api.example.com/profile") // Replace with your API URL
 //       .then((res) => res.json())
@@ -22,9 +31,10 @@ export const Home = () => {
 //         setProfileData(data);
 //         reset(data); // Set default values in the form
 //       });
-  }, [reset]);
+  // }, [reset]);
+console.log("profileData==",profileData);
 
-  const onSubmit = (formData) => {
+  // const onSubmit = (formData) => {
     // fetch("https://api.example.com/profile/update", {
     //   method: "POST",
     //   headers: { "Content-Type": "application/json" },
@@ -38,7 +48,22 @@ export const Home = () => {
     //       setUpdateMessage("Failed to update profile. Check your password.");
     //     }
     //   });
-  };
+  // };
+  const onSubmit = async (data) => {
+    try {
+        console.log(data,'====data');
+        
+        const response = await axiosInstance({ method: "PUT", url: "/staff/profile-update", data });
+        console.log(response, "====response");
+        toast.success("Profile updated");
+        // navigate(user.profile_route);
+    } catch (error) {
+        toast.error(error.response.data.message);
+        console.log(error);
+        console.log("error=",error.response.data.message);
+        
+    }
+};
 
   return (
     <div className="flex flex-col items-center p-4">
@@ -49,14 +74,16 @@ export const Home = () => {
       >
         {/* Name */}
         <div className="flex gap-4 mb-4">
+          {/* <label className="label">"Name"</label> */}
           <input
-            placeholder="First name"
-            {...register("name", { required: true })}
+            placeholder={profileData?.employeeID || "employeeID"}
+            {...register("employeeID")}
             className="input input-bordered w-1/2"
+            readOnly
           />
           <input
-            placeholder="Last name"
-            {...register("surname")}
+            placeholder={profileData?.name || "Name"}
+            {...register("name", { required: true })}
             className="input input-bordered w-1/2"
           />
         </div>
@@ -64,7 +91,7 @@ export const Home = () => {
         {/* Email */}
         <div className="mb-4">
           <input
-            placeholder="Email"
+            placeholder={profileData?.email || "Email"}
             {...register("email", { required: true })}
             className="input input-bordered w-full"
           />
@@ -73,7 +100,7 @@ export const Home = () => {
         {/* Mobile */}
         <div className="mb-4">
           <input
-            placeholder="Mobile"
+            placeholder={profileData?.mobile || "Mobile"}
             {...register("mobile", { required: true })}
             className="input input-bordered w-full"
           />
@@ -82,24 +109,20 @@ export const Home = () => {
         {/* Address */}
         <div className="mb-4">
           <textarea
-            placeholder="Address"
+            placeholder={profileData?.address || "Address"}
             {...register("address")}
             className="textarea textarea-bordered w-full"
           ></textarea>
         </div>
 
-        {/* Department */}
+        {/* role */}
         <div className="mb-4">
-          <select
-            className="select select-bordered w-full"
-            {...register("department", { required: true })}
-          >
-            <option value="">Select Department</option>
-            <option value="doctor">Doctor</option>
-            <option value="receptionist">Receptionist</option>
-            <option value="pharmacist">Pharmacist</option>
-            <option value="nurse">Nurse</option>
-          </select>
+          <input
+            placeholder={profileData?.role || "Role"}
+            // {...register("role", { required: true })}
+            readOnly
+            className="input input-bordered w-full"
+          />
         </div>
 
         {/* Password */}

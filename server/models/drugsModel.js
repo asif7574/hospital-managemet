@@ -5,17 +5,17 @@ const drugSchema = new mongoose.Schema(
         drug_name: {
             type: String,
             required: true,
-            maxLength: 25,
+            maxLength: 50,
         },
         brand_name: {
             type: String,
             required: true,
-            maxLength: 25,
+            maxLength: 50,
         },
         company: {
             type: String,
             required: true,
-            maxLength: 25,
+            maxLength: 50,
         },
         price:{
             type:Number,

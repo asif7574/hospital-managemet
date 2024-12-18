@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../config/axiosInstance";
 
+
 export const Login = ({ role = "user" }) => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export const Login = ({ role = "user" }) => {
       role: "user",
       login_api: "/staff/login",
       profile_route: "/profile",
+      home_route: "/home",
       signup_route: "/signup",
   };
 
@@ -26,10 +28,12 @@ export const Login = ({ role = "user" }) => {
           const response = await axiosInstance({ method: "POST", url: user.login_api, data });
           console.log(response, "====response");
           toast.success("Log-in success");
-          navigate(user.profile_route);
+          navigate(user.home_route);
       } catch (error) {
-          toast.error("Log-in failed");
+          toast.error(error.response.data.message);
           console.log(error);
+          console.log("error=",error.response.data.message);
+          
       }
   };
 
@@ -62,7 +66,7 @@ export const Login = ({ role = "user" }) => {
                               className="input input-bordered"
                               required
                           />
-                          <label className="label">
+                          <label className="label text-xl">
                               <Link to={user.signup_route}>new User ?</Link>
                           </label>
                       </div>

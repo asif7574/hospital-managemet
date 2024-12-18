@@ -7,10 +7,11 @@ import { findAllOp, findAllPatients, getOpDetails, getPatientDetails } from "../
 const router= e.Router();
 
 
-router.get('/find-all-patients',employeeAuth(['doctor']),findAllPatients);
-router.get('/get-patient-details/:patientId',employeeAuth(['doctor']),getPatientDetails);
-router.get('/find-all-op',employeeAuth(['doctor']),findAllOp);
-router.get('/get-op-details/:patientId',employeeAuth(['doctor']),getOpDetails);
+// router.get('/find-all-patients',employeeAuth(['doctor']),findAllPatients);
+router.get('/find-all-patients',findAllPatients);
+router.get('/get-patient-details/:patientId',getPatientDetails);
+router.get('/find-all-op',findAllOp);
+router.get('/get-op-details/:patientId',getOpDetails);
 router.post('/check-patient/:patientId');
 
 

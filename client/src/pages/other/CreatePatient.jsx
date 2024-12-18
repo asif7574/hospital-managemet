@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../config/axiosInstance";
 
-export const CreatePatient = () => {
+export const CreatePatient = (props) => {
     const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
     
@@ -23,6 +23,7 @@ export const CreatePatient = () => {
         // setDataRes(response.data.data);
         toast.success("Patient Created");
         // setIsModalOpen(true);
+        props.modalState()
         
     } catch (error) {
         toast.error("failed");
@@ -31,7 +32,7 @@ export const CreatePatient = () => {
 };
     
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center ">
     <div className="w-full max-w-md  p-6 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-6">Patient Details</h1>
 
@@ -152,7 +153,7 @@ export const CreatePatient = () => {
           )} */}
         </div>
 
-        <button type="submit" className="btn btn-primary w-full">
+        <button  type="submit" className="btn btn-primary w-full">
           Submit
         </button>
       </form>

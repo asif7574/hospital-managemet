@@ -1,3 +1,5 @@
+import { Appointment } from "../models/appointmentModel.js";
+import { Employee } from "../models/employeeModel.js";
 import { Opdata } from "../models/opdataModel.js";
 
 import { Patient } from "../models/patientModel.js";
@@ -56,10 +58,52 @@ export const getOpDetails = async (req, res, next) => {
     try {
         const { opId } = req.params;
 
-        const opData = await Patient.findById(opId);
+        const opData = await Opdata.findById(opId);
 
         res.json({ message: "op-data fetched", data: opData });
     } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+export const getDoctor = async (req, res, next) => {
+    try {
+        
+        const doctors = await Employee.find({ control_role: 'doctor' }, 'name _id'); 
+
+   
+
+        res.json({ message: "doctor-data fetched", data: doctors });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+export const bookAppointment = async (req, res, next) => {
+    try {
+       
+        
+        const todayDate= new Date()
+        const datePart = todayDate.toISOString().split('T')[0];
+      
+        const {name,patient,department,doctor,time}=req.body;
+
+        const statusW="Waitig for Approval"
+        if( !patient || !department || !doctor ){
+            return res.status(400).json({message:"all fields are required"})
+        }
+       
+        const newAp= new Appointment({date:datePart,name,patient,department,doctor,status:statusW,time});
+        await newAp.save()
+      
+        
+        
+        
+        res.json({message:"Appointment Booked Successfully",data: newAp })
+        
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };

@@ -8,7 +8,7 @@ const diagnosisSchema = new mongoose.Schema(
         diagnosis: {
             type: String,
             // required: true, 
-            trim: true,
+            // trim: true,
         },
         mucous_membrane: {
             type: String,

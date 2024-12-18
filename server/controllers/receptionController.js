@@ -1,3 +1,4 @@
+import { Appointment } from "../models/appointmentModel.js";
 import { Opdata } from "../models/opdataModel.js";
 
 import { Patient } from "../models/patientModel.js";
@@ -15,7 +16,7 @@ export const createPatient= async (req,res,next)=>{
 
 
         const {name,email,mobile,address,sex,age}=req.body;
-        if( !name || !email || !sex || !mobile || !address || !age){
+        if( !name || !sex || !mobile || !address || !age){
             return res.status(400).json({message:"all fields are required"})
         }
 
@@ -42,14 +43,16 @@ export const createOp= async (req,res,next)=>{
         const todayDate= new Date()
         const datePart = todayDate.toISOString().split('T')[0];
       
-        const {patient,department,doctor,reception_bill}=req.body;
+        const {name,patient,department,doctor,reception_bill}=req.body;
+
+        const statusA="ACTIVE"
 
         
         if( !patient || !department || !doctor ){
             return res.status(400).json({message:"all fields are required"})
         }
        
-        const newOp= new Opdata({op_Id:newId,date:datePart,patient,department,doctor,reception_bill});
+        const newOp= new Opdata({op_Id:newId,date:datePart,name,patient,department,doctor,reception_bill,status:statusA});
         await newOp.save()
       
         
@@ -57,7 +60,7 @@ export const createOp= async (req,res,next)=>{
        
         console.log(newOp);
         
-        res.json({message:"Op created and added to Today's List"})
+        res.json({message:"Op created "})
         
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
@@ -65,24 +68,65 @@ export const createOp= async (req,res,next)=>{
 }
 
 
-export const addOPtoList= async (req,res,next)=>{
-    try {
+// export const addOPtoList= async (req,res,next)=>{
+//     try {
         
         
-        const todayDate= Date()
+//         const todayDate= Date()
        
-        const opdatafetch= await Opdata.findOne({newId});
-        const opObject=opdatafetch._id
-        const newList = await Oplist.findOneAndUpdate(
-            { date:todayDate },
-            { date:todayDate, op_Id:opObject },
-            { new: true, upsert: true }
-        );
-        res.json({message:"Op  added to todays list"})
+//         const opdatafetch= await Opdata.findOne({newId});
+//         const opObject=opdatafetch._id
+//         const newList = await Oplist.findOneAndUpdate(
+//             { date:todayDate },
+//             { date:todayDate, op_Id:opObject },
+//             { new: true, upsert: true }
+//         );
+//         res.json({message:"Op  added to todays list"})
+//     } catch (error) {
+//         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+//     }
+// }
+
+export const getOpReception = async (req, res, next) => {
+    try {
+        const { patientId } = req.params;
+        const opData = await Opdata.find({ patient: patientId }).sort({ createdAt: -1 }).populate("doctor"); 
+       
+        
+
+        
+
+        res.json({ message: "op reception-data fetched", data: opData });
     } catch (error) {
-        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+        res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
-}
+};
+export const getAppointmentReception = async (req, res, next) => {
+    try {
+        const { patientId } = req.params;
+        const apData = await Appointment.find({ patient: patientId }).sort({ createdAt: -1 }).populate("doctor"); 
+       
+        
 
+        
 
+        res.json({ message: "Appointment reception-data fetched", data: apData });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
 
+// export const findTodayOplist = async (req,res,next) =>{
+//     const todayDate= new Date()
+//         const datePart = todayDate.toISOString().split('T')[0];
+        
+        
+//     try {
+//         const opList = await Opdata.find({date:datePart});
+// console.log(opList);
+
+//         res.json({ message: "op-list fetched", data: opList });
+//     } catch (error) {
+//         res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+//     }
+// };

@@ -35,11 +35,14 @@ const employeeSchema = new mongoose.Schema(
             type: String,
             // required: true,
         },
-        department: [{ type: mongoose.Types.ObjectId, ref: "Dept" }],
+        department:{
+            type: String,
+            enum: ["Surgery","General OP","ENT","Gynecology","Orthopedics","Cardiology","Pulmonology"],
+        },
         
         role: {
             type: String,
-            enum: ["staff","doctor","nurse","pharmacist","receptionist","accountant","lab_technician","ot_staff","accountant"],
+            enum: ["staff","doctor","nurse","pharmacist","receptionist","accountant","lab_technician","ot_staff","accountant","admin"],
             default: "staff",
             // required: true,
         },

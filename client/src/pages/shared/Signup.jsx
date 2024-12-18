@@ -151,12 +151,8 @@ export const Signup = () => {
               <option value="">Select a role</option>
               <option value="staff">Staff</option>
               <option value="doctor">Doctor</option>
-              <option value="nurse">Nurse</option>
               <option value="pharmacist">Pharmacist</option>
               <option value="receptionist">Receptionist</option>
-              <option value="accountant">Accountant</option>
-              <option value="lab_technician">Lab Technician</option>
-              <option value="ot_staff">OT Staff</option>
               <option value="admin">Admin</option>
             </select>
             {/* {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>} */}

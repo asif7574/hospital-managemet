@@ -102,7 +102,44 @@ export const employeeLogout = async (req, res, next) => {
     }
 };
 
+export const checkEmployee= async (req, res, next) => {
+    try {
+        
 
+        res.json({ message: "user autherized" });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+export const updateEmployeeProfile= async (req, res, next) => {
+    try {
+        const { name,employeeID, email, mobile, address, password, role } = req.body;
+
+       const employeeVal= await Employee.findOne({employeeID});
+       
+       if(!employeeVal){
+        return res.status(400).json({message:"employee not exist"})
+    }
+    const isPasswordMatch= bcrypt.compareSync(password,employeeVal.password)
+    if(!isPasswordMatch){
+        return res.status(400).json({message:"Password is Wrong"})
+    }
+
+    if (name) employeeVal.name = name;
+    if (email) employeeVal.email = email;
+    if (mobile) employeeVal.mobile = mobile;
+    if (address) employeeVal.address = address;
+    if (role) employeeVal.department = role;
+
+    await employeeVal.save();
+
+        res.json({ message: "Profile Updated" });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
 
 
 

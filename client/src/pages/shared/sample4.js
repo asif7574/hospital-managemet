@@ -1,10 +1,4 @@
-import React from 'react'
-import { LandingPage } from './LandingPage'
 
-export const Home = () => {
-  return (
-    <div>
-      
 
     <div>
       <section className="hero min-h-[80vh] bg-cover bg-center" style={{ backgroundImage: `url('https://source.unsplash.com/1600x900/?hospital,healthcare')` }}>
@@ -15,8 +9,8 @@ export const Home = () => {
             <p className="mb-6 text-lg">
               Providing trusted and compassionate care for your well-being.
             </p>
-            <button className="btn btn-accent mr-4">Visit now</button>
-            {/* <button className="btn btn-outline btn-info">Learn More</button> */}
+            <button className="btn btn-accent mr-4">Book an Appointment</button>
+            <button className="btn btn-outline btn-info">Learn More</button>
           </div>
         </div>
       </section>
@@ -27,9 +21,9 @@ export const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8">
           {/* Card 1 */}
           <div className="card bg-base-100 shadow-lg">
-            {/* <figure>
+            <figure>
               <img src="https://source.unsplash.com/300x200/?doctor" alt="Doctors" />
-            </figure> */}
+            </figure>
             <div className="card-body">
               <h3 className="card-title">Expert Doctors</h3>
               <p>Highly trained professionals providing top-notch medical care.</p>
@@ -41,9 +35,9 @@ export const Home = () => {
 
           {/* Card 2 */}
           <div className="card bg-base-100 shadow-lg">
-            {/* <figure>
+            <figure>
               <img src="https://source.unsplash.com/300x200/?nurse,hospital" alt="Nursing" />
-            </figure> */}
+            </figure>
             <div className="card-body">
               <h3 className="card-title">24/7 Nursing Care</h3>
               <p>Compassionate and round-the-clock patient care services.</p>
@@ -55,9 +49,9 @@ export const Home = () => {
 
           {/* Card 3 */}
           <div className="card bg-base-100 shadow-lg">
-            {/* <figure>
+            <figure>
               <img src="https://source.unsplash.com/300x200/?pharmacy" alt="Pharmacy" />
-            </figure> */}
+            </figure>
             <div className="card-body">
               <h3 className="card-title">In-house Pharmacy</h3>
               <p>Access to medicines and prescriptions anytime, within the hospital.</p>
@@ -73,7 +67,3 @@ export const Home = () => {
       
     </div>
  
-
-    </div>
-  )
-}

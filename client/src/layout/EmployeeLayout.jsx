@@ -37,8 +37,8 @@ export const EmployeeLayout = () => {
   return (
     <div>
         
-        {/* { isUserAuth? <LoginHeader/>:<Header/>} */}
-        <LoginHeader/>
+        { isUserAuth? <LoginHeader/>:<Header/>}
+        {/* <LoginHeader/> */}
         {/* <Header/> */}
         <div className="min-h-lvh">
           <Outlet />
